@@ -1,0 +1,71 @@
+#List all block devices 
+lasblk
+
+#list all block devices with filesystem 
+df -Th
+
+#every new device(HD) comes in /dev folder ,create a filesystem of it first
+sudo mkfs -t ext4 /dev/xvdf
+
+#mounting a folder/destination path 
+mkdir lakhan
+mount /dev/xvdf lakhan
+
+Automount EBS Volume on Reboot
+By default on every reboot, the  EBS volumes other than root volume will get unmounted. To enable automount, you need to make an entry in the /etc/fstab file.
+
+Step 1: Back up the /etc/fstab file.
+
+sudo cp /etc/fstab /etc/fstab.bak
+#Step 2: Open /etc/fstab file and make an entry in the following format.
+#device_name mount_point file_system_type fs_mntops fs_freq fs_passno
+#For example,
+/dev/xvdf       /newvolume   ext4    defaults,nofail        0       0
+
+#Step 3: Execute the following command to check id the fstab file has any error.
+ 
+ sudo mount -a
+ 
+#If the above command shows no error, it means your fstab entry is good.
+#Now, on every reboot, the extra EBS volumes will get mounted automatically.
+
+
+
+
+#####################EFS-FS attachment####################3
+
+
+
+Connect to the EC2 instance using Secure Shell (SSH), and log in with the appropriate user name. For more information, see Connecting to Your Linux Instance Using SSH in the Amazon EC2 User Guide for Linux Instances.
+
+(Optional) Apply updates before installing the package with the following command:
+
+        sudo apt-get update
+
+Install updates as needed.
+
+Install git and binutils, using the following command. binutils is required for building DEB packages,
+
+        sudo apt-get -y install git binutils
+
+Clone amazon-efs-utils from GitHub using the following command.
+
+        git clone https://github.com/aws/efs-utils
+
+Navigate to the directory that contains the amazon-efs-utils package.
+
+        cd /path/efs-utils
+
+Build amazon-efs-utils using the following command:
+
+        ./build-deb.sh
+
+Install the package with the following command.
+
+          sudo apt-get -y install ./build/amazon-efs-utils*deb
+
+
+##
+https://docs.aws.amazon.com/efs/latest/ug/installing-amazon-efs-utils.html#installing-other-distro
+
+sudo install nfs-utils nfs-common
